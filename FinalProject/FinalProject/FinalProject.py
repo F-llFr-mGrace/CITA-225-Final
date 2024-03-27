@@ -14,3 +14,15 @@ while isRun == True:
         print("exit || close application")
     if userInput == "exit" or userInput == "Exit":
         isRun == False
+        
+def AddProd():
+    print("Adding product...")
+    
+def RemoveProd():
+    print("Removing product...")
+    
+def UpdateProd():
+    print("Updating product...")
+    
+def DisplayProd():
+    print("Displaying all products...")
