@@ -14,6 +14,7 @@ while isRun == True:
         print("exit || close application")
     if userInput == "exit" or userInput == "Exit":
         isRun == False
+        break
         
 def AddProd():
     print("Adding product...")
