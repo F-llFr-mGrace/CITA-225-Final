@@ -117,6 +117,7 @@ def DisplayItems(type):
 
 runIMS = False
 runEcom = False
+authCode = ""
 
 userAuthenticate = str(input("Owner or Customer? (O/C)"))
 userAuthenticate = userAuthenticate.lower()
@@ -205,17 +206,13 @@ if runIMS == True or runEcom == True:
                 if authCode == userCode:
                     runIMS = True
                     runEcom = False
-                    
                 else:
                     runEcom = True
                     runIMS = False
                     print("Wrong password, returning to eCommerce")
-
-
-            if userAuthenticate == "c":
+            elif userAuthenticate == "c":  # Changed from if to elif
                 runEcom = True
                 runIMS = False
-
             else:
                 runIMS = False
                 runEcom = False
