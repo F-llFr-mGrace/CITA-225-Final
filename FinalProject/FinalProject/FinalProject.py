@@ -94,7 +94,64 @@ def AddItem():
         print("Product not found in the product line.")  # If product ID doesn't match any product
 
 def RemoveItem():
-    print("Removing item...")
+    if runIMS == True:
+        # Get the ID of the product to remove
+        product_id = int(input("Please enter product ID to remove: "))
+        current_product = productLine.head
+        prev_product = None
+        current_cart = cart.head
+        prev_cart = None
+
+        # Traverse the product line to find the product with the given ID
+        while current_product:
+            if current_product.data.get("id") == product_id:
+                if prev_product:  # If the node to remove is not the head
+                    prev_product.next = current_product.next
+                else:  # If the node to remove is the head
+                    productLine.head = current_product.next
+                print("Product removed from the product line.")
+                break
+            prev_product = current_product
+            current_product = current_product.next
+
+        # Traverse the cart to find the product with the given ID
+        while current_cart:
+            if current_cart.data.get("id") == product_id:
+                if prev_cart:  # If the node to remove is not the head
+                    prev_cart.next = current_cart.next
+                else:  # If the node to remove is the head
+                    cart.head = current_cart.next
+                print("Product removed from the cart.")
+                break
+            prev_cart = current_cart
+            current_cart = current_cart.next
+
+        # If the product with the given ID is not found in either the product line or the cart
+        if not current_product:
+            print("Product not found in the product line.")
+        if not current_cart:
+            print("Product not found in the cart.")
+
+    if runEcom == True:
+        # Get the ID of the product to remove from the cart
+        product_id = int(input("Please enter product ID to remove from the cart: "))
+        current = cart.head
+        prev = None
+
+        # Traverse the cart to find the product with the given ID
+        while current:
+            if current.data.get("id") == product_id:
+                if prev:  # If the node to remove is not the head
+                    prev.next = current.next
+                else:  # If the node to remove is the head
+                    cart.head = current.next
+                print("Product removed from the cart.")
+                return
+            prev = current
+            current = current.next
+
+        # If the product with the given ID is not found in the cart
+        print("Product not found in the cart.")
 
 # Single-purpose commands
 def UpdateItem():
