@@ -155,7 +155,47 @@ def RemoveItem():
 
 # Single-purpose commands
 def UpdateItem():
-    print("Updating item...")
+    if runIMS == True:
+        # Get the ID of the product to update
+        product_id = int(input("Please enter the ID of the product to update: "))
+        current_product = productLine.head
+
+        # Traverse the product line to find the product with the given ID
+        while current_product:
+            if current_product.data.get("id") == product_id:
+                # Display the current details of the product
+                print("Current details of the product with ID {}: {}".format(product_id, current_product.data))
+                
+                # Allow the user to update the fields other than the ID
+                prodName = str(input("Enter updated product name: "))
+                prodPrice = None
+                while prodPrice == None:
+                    try:
+                        prodPrice = float(input("Enter updated product price: "))
+                    except ValueError:
+                        print("Invalid input. Please enter a valid number.")
+                        prodPrice = None
+
+                # Update the fields of the product
+                current_product.data["name"] = prodName
+                current_product.data["price"] = prodPrice
+                print("Product updated successfully.")
+
+                # Update the corresponding entry in the cart if it exists
+                current_cart = cart.head
+                while current_cart:
+                    if current_cart.data.get("id") == product_id:
+                        current_cart.data["name"] = prodName
+                        current_cart.data["price"] = prodPrice
+                        print("Corresponding entry in the cart updated successfully.")
+                        break
+                    current_cart = current_cart.next
+                return
+
+            current_product = current_product.next
+
+        # If the product with the given ID is not found in the product line
+        print("Product not found in the product line.")
 
 def Undo():
     print("Removing most recent addition...")
