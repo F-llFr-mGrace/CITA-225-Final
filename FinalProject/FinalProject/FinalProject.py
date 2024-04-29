@@ -45,14 +45,20 @@ class Cart:
             current = current.next
 
 # Create a product line linked list
-product_line = ProductLine()
+productLine = ProductLine()
 
 # Append products to the product line
-product_line.append({"name": "Product 1", "price": 10})
-product_line.append({"name": "Product 2", "price": 20})
-product_line.append({"name": "Product 3", "price": 30})
+productLine.append({"name": "Product 1", "price": 10})
+productLine.append({"name": "Product 2", "price": 20})
+productLine.append({"name": "Product 3", "price": 30})
 
-# Display the product line
+# Create a shopping cart linked list
+cart = Cart()
+
+# Append products to the shopping cart
+cart.append({"name": "Product 1", "price": 10})
+
+# Display the contents of the shopping cart
 
 #------------------
 
@@ -76,10 +82,11 @@ def Undo():
 def DisplayItems(type):
     if type == "c":
         print("Displaying cart...")
+        cart.display()
 
     if type == "d":
         print("Displaying all products...")
-        product_line.display()
+        productLine.display()
 
 # Exit executed within the loop
 
