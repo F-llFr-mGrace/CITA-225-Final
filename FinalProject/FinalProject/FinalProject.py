@@ -1,18 +1,34 @@
+"""
+IMS and eCommerce system by Grace Fowler
+CITA 225
+Comments and bug-fixing assistance by ChatGPT
+"""
+
 import decimal
 from math import prod
 
 
 class Node:
+    """A class to represent a node in a linked list."""
     def __init__(self, data=None):
+        """Initialize the node with data."""
         self.data = data
         self.next = None
 
 class ProductLine:
+    """A class to represent the product line."""
     def __init__(self):
+        """Initialize an empty product line with a product ID counter."""
         self.head = None
         self.productIdCounter = 1  # Initialize a counter for unique product IDs
 
     def append(self, productData):
+        """
+        Append a product to the product line.
+
+        Args:
+            productData (dict): The data of the product to be appended.
+        """
         # Add a unique product ID to the product data
         productData['id'] = self.productIdCounter
         self.productIdCounter += 1
@@ -27,16 +43,25 @@ class ProductLine:
         lastNode.next = new_node
 
     def display(self):
+        """Display all products in the product line."""
         current = self.head
         while current:
             print(current.data)
             current = current.next
 
 class Cart:
+    """A class to represent the shopping cart."""
     def __init__(self):
+        """Initialize an empty shopping cart."""
         self.head = None
 
     def append(self, data):
+        """
+        Append a product to the shopping cart.
+
+        Args:
+            data (dict): The data of the product to be appended.
+        """
         new_node = Node(data)
         if not self.head:
             self.head = new_node
@@ -47,6 +72,7 @@ class Cart:
         last_node.next = new_node
 
     def display(self):
+        """Display all products in the shopping cart."""
         current = self.head
         while current:
             print(current.data)
@@ -67,7 +93,13 @@ cart = Cart()
 
 # Multi-purpose commands
 def AddItem():
-    if runIMS == True:
+    """
+    Add a new product to the product line or the cart.
+
+    If the system is running in IMS mode, the user can add a new product to the product line.
+    If the system is running in eCommerce mode, the user can add an existing product from the product line to the cart.
+    """
+    if runIMS:
         prodName = str(input("Enter product name: "))
         
         prodPrice = None
@@ -79,10 +111,10 @@ def AddItem():
                 print("Invalid input. Please enter a valid number.")
                 prodPrice = None
         
-        if prodName != "" and prodPrice != None:
+        if prodName and prodPrice:
             productLine.append({"id": 1, "name": prodName, "price": prodPrice})
 
-    if runEcom == True:
+    if runEcom:
         product_id = int(input("Please enter product ID: "))  # Ask for the product ID
         current = productLine.head
         while current:
@@ -94,7 +126,13 @@ def AddItem():
         print("Product not found in the product line.")  # If product ID doesn't match any product
 
 def RemoveItem():
-    if runIMS == True:
+    """
+    Remove a product from the product line or the cart.
+
+    If the system is running in IMS mode, the user can remove a product from the product line.
+    If the system is running in eCommerce mode, the user can remove a product from the cart.
+    """
+    if runIMS:
         # Get the ID of the product to remove
         product_id = int(input("Please enter product ID to remove: "))
         current_product = productLine.head
@@ -132,7 +170,7 @@ def RemoveItem():
         if not current_cart:
             print("Product not found in the cart.")
 
-    if runEcom == True:
+    if runEcom:
         # Get the ID of the product to remove from the cart
         product_id = int(input("Please enter product ID to remove from the cart: "))
         current = cart.head
@@ -155,7 +193,12 @@ def RemoveItem():
 
 # Single-purpose commands
 def UpdateItem():
-    if runIMS == True:
+    """
+    Update details of a product in the product line.
+
+    If the system is running in IMS mode, the user can update the name and price of a product in the product line.
+    """
+    if runIMS:
         # Get the ID of the product to update
         product_id = int(input("Please enter the ID of the product to update: "))
         current_product = productLine.head
@@ -197,11 +240,14 @@ def UpdateItem():
         # If the product with the given ID is not found in the product line
         print("Product not found in the product line.")
 
-def Undo():
-    print("Removing most recent addition...")
-
 # General Commands
 def DisplayItems(type):
+    """
+    Display either the product line or the shopping cart.
+
+    Args:
+        type (str): The type of items to display. 'c' for cart, 'd' for product line.
+    """
     if type == "c":
         print("Displaying cart...")
         cart.display()
@@ -227,16 +273,16 @@ if userAuthenticate == "o":
 if userAuthenticate == "c":
     runEcom = True
 
-if runIMS == True or runEcom == True:
+if runIMS or runEcom:
     isRun = True
-    while isRun == True:
+    while isRun:
         userInput = None
         print("----------------------------------------")
 
-        if runIMS == True:
+        if runIMS:
             print("Grace Corp IMS || V1.0")
 
-        if runEcom == True:
+        if runEcom:
             print("Grace Corp eCommerce || V1.0")
 
         print("Type 'help' for a full list of commands")
@@ -251,14 +297,14 @@ if runIMS == True or runEcom == True:
             print("Command list")
             print("")
 
-            if runIMS == True:
+            if runIMS:
                 print("IMS specific")
                 print("add || Add a new product by ID")
                 print("remove || Remove a product")
                 print("update || Update a specific product")
                 print("")
 
-            if runEcom == True:
+            if runEcom:
                 print("Cart specific")
                 print("add || Add a product to your cart by ID")
                 print("remove || Remove a product from your cart")
@@ -280,11 +326,11 @@ if runIMS == True or runEcom == True:
             RemoveItem()
 
         # Single-purpose commands
-        if runIMS == True:
+        if runIMS:
             if userInput == "update":
                 UpdateItem()
 
-        if runEcom == True:
+        if runEcom:
             if userInput == "undo":
                 break
 
@@ -315,5 +361,5 @@ if runIMS == True or runEcom == True:
                 runEcom = False
 
         if userInput == "exit":
-            isRun == False
+            isRun = False
             break
