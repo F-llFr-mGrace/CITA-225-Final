@@ -48,35 +48,61 @@ def DisplayProd():
     print("Displaying all products...")
     product_line.display()
 
+runIMS = False
+runEcom = False
 
-isRun = True
-while isRun == True:
-    userInput = None
-    print("Product name || V1.0")
-    print("Type 'help' for a full list of commands")
-    userInput = str(input(""))
-    userInput = userInput.lower() #Makes lowercase
-    if userInput == "help" or userInput == "Help":
-        print("Command list")
-        print("add || Add a new product")
-        print("remove || Remove a product")
-        print("update || Update a specific product")
-        print("display || Display entire inventory")
-        print("help || this menu")
-        print("exit || close application")
+userAuthenticate = str(input("Owner or Customer? (O/C)"))
+userAuthenticate = userAuthenticate.lower()
+if userAuthenticate == "o":
+    authCode = "Password!"
+    userCode = str(input("Enter password: "))
+    if authCode == userCode:
+        runIMS = True 
         
-    if userInput == "add":
-        AddProd()
+if userAuthenticate == "c":
+    runEcom = True
+
+if runIMS == True or runEcom == True:
+    isRun = True
+    while isRun == True:
+        userInput = None
+        print("----------------------------------------")
+        
+        if runIMS == True:
+            print("Grace Corp IMS || V1.0")
+            
+        if runEcom == True:
+            print("Grace Corp eCommerce || V1.0")    
+            
+        print("Type 'help' for a full list of commands")
+        print("")
+
+        userInput = str(input(""))
+        userInput = userInput.lower() #Makes lowercase
+        
+        print("")
     
-    if userInput == "remove":
-        RemoveProd()
+        if userInput == "help" or userInput == "Help":
+            print("Command list")
+            print("add || Add a new product")
+            print("remove || Remove a product")
+            print("update || Update a specific product")
+            print("display || Display entire inventory")
+            print("help || this menu")
+            print("exit || close application")
+        
+        if userInput == "add":
+            AddProd()
     
-    if userInput == "update":
-        break
+        if userInput == "remove":
+            RemoveProd()
     
-    if userInput == "display":
-        break
+        if userInput == "update":
+            UpdateProd()
     
-    if userInput == "exit":
-        isRun == False
-        break
+        if userInput == "display":
+            DisplayProd()
+    
+        if userInput == "exit":
+            isRun == False
+            break
