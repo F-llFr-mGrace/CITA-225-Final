@@ -37,14 +37,14 @@ product_line.append({"name": "Product 3", "price": 30})
 
 #Multi-purpose commands
 def AddItem():
-    print("Adding product...")
+    print("Adding item...")
     
 def RemoveItem():
-    print("Removing product...")
+    print("Removing item...")
     
 #Single-purpose commands
 def UpdateItem():
-    print("Updating product...")
+    print("Updating item...")
     
 def Undo():
     print("Removing most recent addition...")
