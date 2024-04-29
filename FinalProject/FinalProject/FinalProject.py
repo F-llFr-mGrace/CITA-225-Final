@@ -35,18 +35,30 @@ product_line.append({"name": "Product 3", "price": 30})
 
 #------------------
 
-def AddProd():
+#Multi-purpose commands
+def AddItem():
     print("Adding product...")
     
-def RemoveProd():
+def RemoveItem():
     print("Removing product...")
     
-def UpdateProd():
+#Single-purpose commands
+def UpdateItem():
     print("Updating product...")
     
-def DisplayProd():
-    print("Displaying all products...")
-    product_line.display()
+def Undo():
+    print("Removing most recent addition...")
+    
+#General Commands
+def DisplayItems(type):
+    if type == "c":
+        print("Displaying cart...")
+        
+    if type == "d":
+        print("Displaying all products...")
+        product_line.display()
+        
+#Exit executed within the loop
 
 runIMS = False
 runEcom = False
@@ -99,25 +111,34 @@ if runIMS == True or runEcom == True:
                 print("remove || Remove a product from your cart")
                 print("undo || Remove a product from your cart")
                 print("based on most recently added")
-                print("display cart || Display entire inventory")
+                print("cart || Display entire inventory")
                 print("")
                 
             print("General commands")
             print("display || Display entire inventory")
-            print("help || this menu")
-            print("exit || close application")
+            print("help || This menu")
+            print("exit || Close application")
         
+        #Multi-purpose commands
         if userInput == "add":
-            AddProd()
+            AddItem()
     
         if userInput == "remove":
-            RemoveProd()
+            RemoveItem()
     
+        #Single-purpose commands
         if userInput == "update":
-            UpdateProd()
+            UpdateItem()
+            
+        if userInput == "undo":
+            break
+        
+        if userInput == "cart":
+            DisplayItems("c")
     
+        #General Commands
         if userInput == "display":
-            DisplayProd()
+            DisplayItems("d")
     
         if userInput == "exit":
             isRun == False
