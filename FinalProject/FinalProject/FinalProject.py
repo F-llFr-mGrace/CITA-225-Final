@@ -157,14 +157,16 @@ if runIMS == True or runEcom == True:
             RemoveItem()
 
         # Single-purpose commands
-        if userInput == "update":
-            UpdateItem()
+        if runIMS == True:
+            if userInput == "update":
+                UpdateItem()
 
-        if userInput == "undo":
-            break
+        if runEcom == True:
+            if userInput == "undo":
+                break
 
-        if userInput == "cart":
-            DisplayItems("c")
+            if userInput == "cart":
+                DisplayItems("c")
 
         # General Commands
         if userInput == "display":
