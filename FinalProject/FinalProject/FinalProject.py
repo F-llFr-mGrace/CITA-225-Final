@@ -54,7 +54,7 @@ runEcom = False
 userAuthenticate = str(input("Owner or Customer? (O/C)"))
 userAuthenticate = userAuthenticate.lower()
 if userAuthenticate == "o":
-    authCode = "Password!"
+    authCode = ""
     userCode = str(input("Enter password: "))
     if authCode == userCode:
         runIMS = True 
@@ -84,9 +84,25 @@ if runIMS == True or runEcom == True:
     
         if userInput == "help" or userInput == "Help":
             print("Command list")
-            print("add || Add a new product")
-            print("remove || Remove a product")
-            print("update || Update a specific product")
+            print("")
+            
+            if runIMS == True:
+                print("IMS specific")
+                print("add || Add a new product")
+                print("remove || Remove a product")
+                print("update || Update a specific product")
+                print("")
+                
+            if runEcom == True:
+                print("Cart specific")
+                print("add || Add a product to your cart")
+                print("remove || Remove a product from your cart")
+                print("undo || Remove a product from your cart")
+                print("based on most recently added")
+                print("display cart || Display entire inventory")
+                print("")
+                
+            print("General commands")
             print("display || Display entire inventory")
             print("help || this menu")
             print("exit || close application")
