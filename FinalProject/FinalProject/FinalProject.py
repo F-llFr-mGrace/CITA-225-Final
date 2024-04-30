@@ -1,9 +1,3 @@
-"""
-IMS and eCommerce system by Grace Fowler
-CITA 225
-Comments and bug-fixing assistance by ChatGPT
-"""
-
 import decimal
 from math import prod
 
@@ -89,6 +83,9 @@ productLine.append({"id": 3, "name": "Product C", "price": float(30)})
 # Create a shopping cart linked list
 cart = Cart()
 
+# Create a stack to store the IDs of items added to the cart for undo functionality
+stackUndo = []
+
 #------------------
 
 # Multi-purpose commands
@@ -115,10 +112,10 @@ def AddItem():
             productLine.append({"id": 1, "name": prodName, "price": prodPrice})
 
     if runEcom:
-        product_id = int(input("Please enter product ID: "))  # Ask for the product ID
+        productId = int(input("Please enter product ID: "))  # Ask for the product ID
         current = productLine.head
         while current:
-            if current.data.get("id") == product_id:  # Check if the current product has the matching ID
+            if current.data.get("id") == productId:  # Check if the current product has the matching ID
                 cart.append(current.data)  # Append the product to the cart
                 print("Product added to cart.")
                 return
@@ -134,51 +131,51 @@ def RemoveItem():
     """
     if runIMS:
         # Get the ID of the product to remove
-        product_id = int(input("Please enter product ID to remove: "))
-        current_product = productLine.head
-        prev_product = None
-        current_cart = cart.head
-        prev_cart = None
+        productId = int(input("Please enter product ID to remove: "))
+        currentProduct = productLine.head
+        prevProduct = None
+        currentCart = cart.head
+        prevCart = None
 
         # Traverse the product line to find the product with the given ID
-        while current_product:
-            if current_product.data.get("id") == product_id:
-                if prev_product:  # If the node to remove is not the head
-                    prev_product.next = current_product.next
+        while currentProduct:
+            if currentProduct.data.get("id") == productId:
+                if prevProduct:  # If the node to remove is not the head
+                    prevProduct.next = currentProduct.next
                 else:  # If the node to remove is the head
-                    productLine.head = current_product.next
+                    productLine.head = currentProduct.next
                 print("Product removed from the product line.")
                 break
-            prev_product = current_product
-            current_product = current_product.next
+            prevProduct = currentProduct
+            currentProduct = currentProduct.next
 
         # Traverse the cart to find the product with the given ID
-        while current_cart:
-            if current_cart.data.get("id") == product_id:
-                if prev_cart:  # If the node to remove is not the head
-                    prev_cart.next = current_cart.next
+        while currentCart:
+            if currentCart.data.get("id") == productId:
+                if prevCart:  # If the node to remove is not the head
+                    prevCart.next = currentCart.next
                 else:  # If the node to remove is the head
-                    cart.head = current_cart.next
+                    cart.head = currentCart.next
                 print("Product removed from the cart.")
                 break
-            prev_cart = current_cart
-            current_cart = current_cart.next
+            prevCart = currentCart
+            currentCart = currentCart.next
 
         # If the product with the given ID is not found in either the product line or the cart
-        if not current_product:
+        if not currentProduct:
             print("Product not found in the product line.")
-        if not current_cart:
+        if not currentCart:
             print("Product not found in the cart.")
 
     if runEcom:
         # Get the ID of the product to remove from the cart
-        product_id = int(input("Please enter product ID to remove from the cart: "))
+        productId = int(input("Please enter product ID to remove from the cart: "))
         current = cart.head
         prev = None
 
         # Traverse the cart to find the product with the given ID
         while current:
-            if current.data.get("id") == product_id:
+            if current.data.get("id") == productId:
                 if prev:  # If the node to remove is not the head
                     prev.next = current.next
                 else:  # If the node to remove is the head
@@ -200,14 +197,14 @@ def UpdateItem():
     """
     if runIMS:
         # Get the ID of the product to update
-        product_id = int(input("Please enter the ID of the product to update: "))
-        current_product = productLine.head
+        productId = int(input("Please enter the ID of the product to update: "))
+        currentProduct = productLine.head
 
         # Traverse the product line to find the product with the given ID
-        while current_product:
-            if current_product.data.get("id") == product_id:
+        while currentProduct:
+            if currentProduct.data.get("id") == productId:
                 # Display the current details of the product
-                print("Current details of the product with ID {}: {}".format(product_id, current_product.data))
+                print("Current details of the product with ID {}: {}".format(productId, currentProduct.data))
                 
                 # Allow the user to update the fields other than the ID
                 prodName = str(input("Enter updated product name: "))
@@ -220,25 +217,49 @@ def UpdateItem():
                         prodPrice = None
 
                 # Update the fields of the product
-                current_product.data["name"] = prodName
-                current_product.data["price"] = prodPrice
+                currentProduct.data["name"] = prodName
+                currentProduct.data["price"] = prodPrice
                 print("Product updated successfully.")
 
                 # Update the corresponding entry in the cart if it exists
-                current_cart = cart.head
-                while current_cart:
-                    if current_cart.data.get("id") == product_id:
-                        current_cart.data["name"] = prodName
-                        current_cart.data["price"] = prodPrice
+                currentCart = cart.head
+                while currentCart:
+                    if currentCart.data.get("id") == productId:
+                        currentCart.data["name"] = prodName
+                        currentCart.data["price"] = prodPrice
                         print("Corresponding entry in the cart updated successfully.")
                         break
-                    current_cart = current_cart.next
+                    currentCart = currentCart.next
                 return
 
-            current_product = current_product.next
+            currentProduct = currentProduct.next
 
         # If the product with the given ID is not found in the product line
         print("Product not found in the product line.")
+
+def Undo():
+    """
+    Remove the most recently added product from the cart.
+    """
+    if stackUndo:
+        # Get the ID of the most recently added item from the stack
+        undo_id = stackUndo.pop()
+        
+        # Remove the item from the cart
+        current = cart.head
+        prev = None
+        while current:
+            if current.data.get("id") == undo_id:
+                if prev:  # If the node to remove is not the head
+                    prev.next = current.next
+                else:  # If the node to remove is the head
+                    cart.head = current.next
+                print("Most recently added product removed from the cart.")
+                return
+            prev = current
+            current = current.next
+    else:
+        print("No items to undo.")
 
 # General Commands
 def DisplayItems(type):
@@ -289,7 +310,7 @@ if runIMS or runEcom:
         print("")
 
         userInput = str(input(""))
-        userInput = userInput.lower()  # Makes lowercase
+        userInput = userInput.lower()
 
         print("")
 
@@ -332,7 +353,7 @@ if runIMS or runEcom:
 
         if runEcom:
             if userInput == "undo":
-                break
+                Undo()
 
             if userInput == "cart":
                 DisplayItems("c")
@@ -353,7 +374,7 @@ if runIMS or runEcom:
                     runEcom = True
                     runIMS = False
                     print("Wrong password, returning to eCommerce")
-            elif userAuthenticate == "c":  # Changed from if to elif
+            elif userAuthenticate == "c":
                 runEcom = True
                 runIMS = False
             else:
