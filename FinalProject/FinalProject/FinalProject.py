@@ -8,18 +8,24 @@ import decimal
 from math import prod
 
 
+'''
+Defines a class to represent a node in a linked list.
+'''
 class Node:
     """A class to represent a node in a linked list."""
     def __init__(self, data=None):
         """Initialize the node with data."""
-        self.data = data
-        self.next = None
+        self.data = data  # Assigns the data to the node
+        self.next = None  # Initializes the next pointer to None
 
+'''
+Defines a class to represent the product line.
+'''
 class ProductLine:
     """A class to represent the product line."""
     def __init__(self):
         """Initialize an empty product line with a product ID counter."""
-        self.head = None
+        self.head = None  # Initializes the head of the product line to None
         self.productIdCounter = 1  # Initialize a counter for unique product IDs
 
     def append(self, productData):
@@ -30,30 +36,33 @@ class ProductLine:
             productData (dict): The data of the product to be appended.
         """
         # Add a unique product ID to the product data
-        productData['id'] = self.productIdCounter
-        self.productIdCounter += 1
+        productData['id'] = self.productIdCounter  # Assigns a unique ID to the product data
+        self.productIdCounter += 1  # Increments the product ID counter
         
-        new_node = Node(productData)
-        if not self.head:
-            self.head = new_node
+        new_node = Node(productData)  # Creates a new node with the product data
+        if not self.head:  # If the product line is empty
+            self.head = new_node  # Sets the new node as the head
             return
-        lastNode = self.head
-        while lastNode.next:
+        lastNode = self.head  # Initializes a pointer to traverse the product line
+        while lastNode.next:  # Traverses to the last node in the product line
             lastNode = lastNode.next
-        lastNode.next = new_node
+        lastNode.next = new_node  # Appends the new node to the end of the product line
 
     def display(self):
         """Display all products in the product line."""
-        current = self.head
-        while current:
-            print(current.data)
-            current = current.next
+        current = self.head  # Initializes a pointer to traverse the product line
+        while current:  # Iterates through the product line
+            print(current.data)  # Prints the data of the current node
+            current = current.next  # Moves to the next node in the product line
 
+'''
+Defines a class to represent the shopping cart.
+'''
 class Cart:
     """A class to represent the shopping cart."""
     def __init__(self):
         """Initialize an empty shopping cart."""
-        self.head = None
+        self.head = None  # Initializes the head of the shopping cart to None
 
     def append(self, data):
         """
@@ -62,47 +71,62 @@ class Cart:
         Args:
             data (dict): The data of the product to be appended.
         """
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
+        new_node = Node(data)  # Creates a new node with the product data
+        if not self.head:  # If the shopping cart is empty
+            self.head = new_node  # Sets the new node as the head
             return
-        last_node = self.head
-        while last_node.next:
+        last_node = self.head  # Initializes a pointer to traverse the shopping cart
+        while last_node.next:  # Traverses to the last node in the shopping cart
             last_node = last_node.next
-        last_node.next = new_node
+        last_node.next = new_node  # Appends the new node to the end of the shopping cart
 
     def display(self):
         """Display all products in the shopping cart."""
-        current = self.head
-        while current:
-            print(current.data)
-            current = current.next
+        current = self.head  # Initializes a pointer to traverse the shopping cart
+        while current:  # Iterates through the shopping cart
+            print(current.data)  # Prints the data of the current node
+            current = current.next  # Moves to the next node in the shopping cart
 
-# Create a product line linked list
+'''
+Creates an instance of the ProductLine class to represent the product line.
+'''
 productLine = ProductLine()
 
-# Append products to the product line with unique product IDs
+'''
+Appends products to the product line with unique product IDs.
+'''
 productLine.append({"id": 1, "name": "Product A", "price": float(10)})
 productLine.append({"id": 2, "name": "Product B", "price": float(20)})
 productLine.append({"id": 3, "name": "Product C", "price": float(30)})
 
-# Create a shopping cart linked list
+'''
+Creates an instance of the Cart class to represent the shopping cart.
+'''
 cart = Cart()
+
+'''
+Creates an empty stack to store the IDs of items added to the cart for undo functionality.
+'''
+stackUndo = []
 
 #------------------
 
-# Multi-purpose commands
+'''
+This function handles the addition of a new product to the product line or the cart.
+If the system is running in IMS mode, the user can add a new product to the product line.
+If the system is running in eCommerce mode, the user can add an existing product from the product line to the cart.
+'''
 def AddItem():
-    """
-    Add a new product to the product line or the cart.
-
-    If the system is running in IMS mode, the user can add a new product to the product line.
-    If the system is running in eCommerce mode, the user can add an existing product from the product line to the cart.
-    """
     if runIMS:
+        '''
+        Prompt the user to enter the name and price of the product.
+        '''
         prodName = str(input("Enter product name: "))
         
         prodPrice = None
+        '''
+        Validate the input for the product price.
+        '''
         while prodPrice == None:
             try:
                 prodPrice = float(input("Enter a product price: "))
@@ -111,77 +135,97 @@ def AddItem():
                 print("Invalid input. Please enter a valid number.")
                 prodPrice = None
         
+        '''
+        If both product name and price are provided, append the product to the product line.
+        '''
         if prodName and prodPrice:
             productLine.append({"id": 1, "name": prodName, "price": prodPrice})
 
     if runEcom:
-        product_id = int(input("Please enter product ID: "))  # Ask for the product ID
+        '''
+        If running in eCommerce mode, prompt the user to enter the product ID.
+        '''
+        productId = int(input("Please enter product ID: "))  # Ask for the product ID
         current = productLine.head
+        '''
+        Iterate through the product line to find the product with the matching ID.
+        '''
         while current:
-            if current.data.get("id") == product_id:  # Check if the current product has the matching ID
+            if current.data.get("id") == productId:  # Check if the current product has the matching ID
+                '''
+                If a product with the given ID is found, append it to the cart.
+                '''
                 cart.append(current.data)  # Append the product to the cart
                 print("Product added to cart.")
                 return
             current = current.next
+        '''
+        If no product with the given ID is found, print a message indicating that.
+        '''
         print("Product not found in the product line.")  # If product ID doesn't match any product
 
+'''
+This function handles the removal of a product from the product line or the cart.
+If the system is running in IMS mode, the user can remove a product from the product line.
+If the system is running in eCommerce mode, the user can remove a product from the cart.
+'''
 def RemoveItem():
-    """
-    Remove a product from the product line or the cart.
-
-    If the system is running in IMS mode, the user can remove a product from the product line.
-    If the system is running in eCommerce mode, the user can remove a product from the cart.
-    """
     if runIMS:
         # Get the ID of the product to remove
-        product_id = int(input("Please enter product ID to remove: "))
-        current_product = productLine.head
-        prev_product = None
-        current_cart = cart.head
-        prev_cart = None
+        productId = int(input("Please enter product ID to remove: "))
+        currentProduct = productLine.head
+        prevProduct = None
+        currentCart = cart.head
+        prevCart = None
 
         # Traverse the product line to find the product with the given ID
-        while current_product:
-            if current_product.data.get("id") == product_id:
-                if prev_product:  # If the node to remove is not the head
-                    prev_product.next = current_product.next
-                else:  # If the node to remove is the head
-                    productLine.head = current_product.next
+        while currentProduct:
+            if currentProduct.data.get("id") == productId:
+                # If the node to remove is not the head
+                if prevProduct:
+                    prevProduct.next = currentProduct.next
+                # If the node to remove is the head
+                else:
+                    productLine.head = currentProduct.next
                 print("Product removed from the product line.")
                 break
-            prev_product = current_product
-            current_product = current_product.next
+            prevProduct = currentProduct
+            currentProduct = currentProduct.next
 
         # Traverse the cart to find the product with the given ID
-        while current_cart:
-            if current_cart.data.get("id") == product_id:
-                if prev_cart:  # If the node to remove is not the head
-                    prev_cart.next = current_cart.next
-                else:  # If the node to remove is the head
-                    cart.head = current_cart.next
+        while currentCart:
+            if currentCart.data.get("id") == productId:
+                # If the node to remove is not the head
+                if prevCart:
+                    prevCart.next = currentCart.next
+                # If the node to remove is the head
+                else:
+                    cart.head = currentCart.next
                 print("Product removed from the cart.")
                 break
-            prev_cart = current_cart
-            current_cart = current_cart.next
+            prevCart = currentCart
+            currentCart = currentCart.next
 
         # If the product with the given ID is not found in either the product line or the cart
-        if not current_product:
+        if not currentProduct:
             print("Product not found in the product line.")
-        if not current_cart:
+        if not currentCart:
             print("Product not found in the cart.")
 
     if runEcom:
         # Get the ID of the product to remove from the cart
-        product_id = int(input("Please enter product ID to remove from the cart: "))
+        productId = int(input("Please enter product ID to remove from the cart: "))
         current = cart.head
         prev = None
 
         # Traverse the cart to find the product with the given ID
         while current:
-            if current.data.get("id") == product_id:
-                if prev:  # If the node to remove is not the head
+            if current.data.get("id") == productId:
+                # If the node to remove is not the head
+                if prev:
                     prev.next = current.next
-                else:  # If the node to remove is the head
+                # If the node to remove is the head
+                else:
                     cart.head = current.next
                 print("Product removed from the cart.")
                 return
@@ -192,22 +236,21 @@ def RemoveItem():
         print("Product not found in the cart.")
 
 # Single-purpose commands
+'''
+This function updates the details of a product in the product line.
+If the system is running in IMS mode, the user can update the name and price of a product in the product line.
+'''
 def UpdateItem():
-    """
-    Update details of a product in the product line.
-
-    If the system is running in IMS mode, the user can update the name and price of a product in the product line.
-    """
     if runIMS:
         # Get the ID of the product to update
-        product_id = int(input("Please enter the ID of the product to update: "))
-        current_product = productLine.head
+        productId = int(input("Please enter the ID of the product to update: "))
+        currentProduct = productLine.head
 
         # Traverse the product line to find the product with the given ID
-        while current_product:
-            if current_product.data.get("id") == product_id:
+        while currentProduct:
+            if currentProduct.data.get("id") == productId:
                 # Display the current details of the product
-                print("Current details of the product with ID {}: {}".format(product_id, current_product.data))
+                print("Current details of the product with ID {}: {}".format(productId, currentProduct.data))
                 
                 # Allow the user to update the fields other than the ID
                 prodName = str(input("Enter updated product name: "))
@@ -220,27 +263,56 @@ def UpdateItem():
                         prodPrice = None
 
                 # Update the fields of the product
-                current_product.data["name"] = prodName
-                current_product.data["price"] = prodPrice
+                currentProduct.data["name"] = prodName
+                currentProduct.data["price"] = prodPrice
                 print("Product updated successfully.")
 
                 # Update the corresponding entry in the cart if it exists
-                current_cart = cart.head
-                while current_cart:
-                    if current_cart.data.get("id") == product_id:
-                        current_cart.data["name"] = prodName
-                        current_cart.data["price"] = prodPrice
+                currentCart = cart.head
+                while currentCart:
+                    if currentCart.data.get("id") == productId:
+                        currentCart.data["name"] = prodName
+                        currentCart.data["price"] = prodPrice
                         print("Corresponding entry in the cart updated successfully.")
                         break
-                    current_cart = current_cart.next
+                    currentCart = currentCart.next
                 return
 
-            current_product = current_product.next
+            currentProduct = currentProduct.next
 
         # If the product with the given ID is not found in the product line
         print("Product not found in the product line.")
 
+'''
+This function removes the most recently added product from the cart if there are items in the undo stack.
+'''
+def Undo():
+    if stackUndo:
+        # Get the ID of the most recently added item from the stack
+        undo_id = stackUndo.pop()
+        
+        # Remove the item from the cart
+        current = cart.head
+        prev = None
+        while current:
+            if current.data.get("id") == undo_id:
+                # If the node to remove is not the head
+                if prev:
+                    prev.next = current.next
+                # If the node to remove is the head
+                else:
+                    cart.head = current.next
+                print("Most recently added product removed from the cart.")
+                return
+            prev = current
+            current = current.next
+    else:
+        print("No items to undo.")
+
 # General Commands
+'''
+This function displays either the product line or the shopping cart based on the specified type.
+'''
 def DisplayItems(type):
     """
     Display either the product line or the shopping cart.
@@ -249,30 +321,42 @@ def DisplayItems(type):
         type (str): The type of items to display. 'c' for cart, 'd' for product line.
     """
     if type == "c":
+        # Display the shopping cart
         print("Displaying cart...")
         cart.display()
 
     if type == "d":
+        # Display all products in the product line
         print("Displaying all products...")
         productLine.display()
 
-# Exit executed within the loop
-
+# Initialize variables to control program mode and authentication
 runIMS = False
 runEcom = False
 authCode = ""
 
+# Prompt user to select owner or customer mode
 userAuthenticate = str(input("Owner or Customer? (O/C)"))
 userAuthenticate = userAuthenticate.lower()
+
+# If owner mode is selected
 if userAuthenticate == "o":
+    # Ask for authentication code
     authCode = ""
     userCode = str(input("Enter password: "))
+    
+    # If authentication code matches, switch to IMS mode
     if authCode == userCode:
         runIMS = True
 
+# If customer mode is selected
 if userAuthenticate == "c":
+    # Switch to eCommerce mode
     runEcom = True
 
+'''
+This loop controls the main functionality of the program based on the selected mode (IMS or eCommerce).
+'''
 if runIMS or runEcom:
     isRun = True
     while isRun:
@@ -288,11 +372,13 @@ if runIMS or runEcom:
         print("Type 'help' for a full list of commands")
         print("")
 
+        # Get user input and convert it to lowercase
         userInput = str(input(""))
-        userInput = userInput.lower()  # Makes lowercase
+        userInput = userInput.lower()
 
         print("")
 
+        # Display help menu
         if userInput == "help":
             print("Command list")
             print("")
@@ -332,7 +418,7 @@ if runIMS or runEcom:
 
         if runEcom:
             if userInput == "undo":
-                break
+                Undo()
 
             if userInput == "cart":
                 DisplayItems("c")
@@ -341,6 +427,7 @@ if runIMS or runEcom:
         if userInput == "display":
             DisplayItems("d")
             
+        # Log out or change user
         if userInput == "logout":
             userAuthenticate = str(input("Owner or Customer? (O/C)"))
             userAuthenticate = userAuthenticate.lower()
@@ -353,13 +440,14 @@ if runIMS or runEcom:
                     runEcom = True
                     runIMS = False
                     print("Wrong password, returning to eCommerce")
-            elif userAuthenticate == "c":  # Changed from if to elif
+            elif userAuthenticate == "c":
                 runEcom = True
                 runIMS = False
             else:
                 runIMS = False
                 runEcom = False
 
+        # Exit the application
         if userInput == "exit":
             isRun = False
             break
